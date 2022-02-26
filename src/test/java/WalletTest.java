@@ -29,6 +29,7 @@ public class WalletTest {
     @Test
     void shouldReturnTrueWhenTheAmountIsWithdrawnSuccessfully() throws InsufficientAmount, EnteredInvalidAmount {
         Wallet wallet = new Wallet();
+
         wallet.deposit(79, Currency.Rs);
 
         assertThat(wallet.withdraw(1, Currency.$), is(true));
@@ -37,6 +38,7 @@ public class WalletTest {
     @Test
     void ShouldThrowExceptionWhenTheWithdrawalAmountIsMoreThanTheAvailableAmount() throws EnteredInvalidAmount {
         Wallet wallet = new Wallet();
+
         wallet.deposit(2, Currency.$);
 
         assertThrows(InsufficientAmount.class, () -> {
@@ -45,5 +47,15 @@ public class WalletTest {
 
     }
 
+    @Test
+    void shouldEquateWalletAmount() throws EnteredInvalidAmount {
+        Wallet wallet = new Wallet();
 
+        wallet.deposit(45, Currency.Rs);
+        wallet.deposit(84, Currency.Rs);
+        wallet.deposit(1,Currency.$);
+        String expected = "$ 2.723446893787575";
+
+        assertThat(wallet.checkAmount(Currency.$), is(expected));
+    }
 }

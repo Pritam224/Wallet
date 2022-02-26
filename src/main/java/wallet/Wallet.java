@@ -29,4 +29,10 @@ public class Wallet {
         TotalAmountInRupee -= value * currency.getConversionValue();
         return true;
     }
+
+
+    public String checkAmount(Currency currency) {
+        String availableAmount = currency + " " + TotalAmountInRupee / currency.getConversionValue();
+        return availableAmount;
+    }
 }
