@@ -9,4 +9,9 @@ public enum Currency {
     Currency(double value) {
         this.value = value;
     }
+
+    double getConversionValue()
+    {
+        return this.value;
+    }
 }

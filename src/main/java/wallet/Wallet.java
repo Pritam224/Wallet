@@ -1,29 +1,32 @@
 package wallet;
 
-import exceptions.InvalidAmountToDeposit;
+import exceptions.InsufficientAmount;
+import exceptions.EnteredInvalidAmount;
 
 public class Wallet {
-    private final double value;
-    private final Currency currency;
-    private double TotalAmountInDollar = 0;
+
     private double TotalAmountInRupee = 0;
 
-    public Wallet(double value, Currency currency) {
-        this.value = value;
-        this.currency = currency;
-    }
 
-    public boolean deposit(double value, Currency currency) throws InvalidAmountToDeposit {
+    public boolean deposit(double value, Currency currency) throws EnteredInvalidAmount {
         if (value <= 0) {
-            throw new InvalidAmountToDeposit();
+            throw new EnteredInvalidAmount();
         }
-        if (currency == Currency.$) {
-            TotalAmountInDollar += value;
-        } else {
-            TotalAmountInRupee += value;
-        }
+        TotalAmountInRupee += value * currency.getConversionValue();
+
         return true;
     }
 
 
+    public boolean withdraw(double value, Currency currency) throws InsufficientAmount, EnteredInvalidAmount {
+        if (value <= 0) {
+            throw new EnteredInvalidAmount();
+        }
+        if (TotalAmountInRupee < value * currency.getConversionValue()) {
+            throw new InsufficientAmount();
+        }
+
+        TotalAmountInRupee -= value * currency.getConversionValue();
+        return true;
+    }
 }
