@@ -10,7 +10,7 @@ public enum Currency {
         this.value = value;
     }
 
-    double getConversionValue()
+    public double getConversionValue()
     {
         return this.value;
     }

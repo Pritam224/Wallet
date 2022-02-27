@@ -1,61 +1,53 @@
 
 import exceptions.InsufficientAmount;
-import exceptions.EnteredInvalidAmount;
-import wallet.Currency;
+import wallet.Money;
 import wallet.Wallet;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static wallet.Money.dollar;
+import static wallet.Money.rupee;
 
 public class WalletTest {
     @Test
-    void shouldReturnTrueWhenTheMoneyIsDepositedToTheWallet() throws EnteredInvalidAmount {
-        Wallet wallet = new Wallet();
+    void shouldReturnTrueWhenTheMoneyIsDepositedToTheWallet() {
+        Wallet wallet = new Wallet(0);
+        Money oneRupee = rupee(1);
 
-        assertThat(wallet.deposit(1, Currency.Rs), is(true));
+        wallet.deposit(oneRupee);
+
+        assertThat(wallet.checkAmountInRupee(), is(equalTo(oneRupee)));
+    }
+
+
+    @Test
+    void shouldReturnTrueWhenTheMoneyIsWithdrawnSuccessfully() throws InsufficientAmount{
+        Wallet wallet = new Wallet(0);
+        Money seventyNineRupee = rupee(79);
+        Money oneDollar = rupee(1);
+
+        wallet.deposit(seventyNineRupee);
+        wallet.withdraw(oneDollar);
+
+        assertThat(wallet.checkAmountInRupee(), is(equalTo(rupee(78))));
     }
 
     @Test
-    void shouldThrowExceptionWhenTheDepositAmountIsInvalid() {
-        Wallet wallet = new Wallet();
+    void ShouldThrowExceptionWhenTheWithdrawalMoneyIsMoreThanTheWalletMoney() {
+        Wallet wallet = new Wallet(0);
+        Money twoDollar = dollar(2);
+        Money twoHundredRupee = rupee(200);
 
-        assertThrows(EnteredInvalidAmount.class, () -> {
-            wallet.deposit(-2, Currency.Rs);
-        });
-    }
-
-    @Test
-    void shouldReturnTrueWhenTheAmountIsWithdrawnSuccessfully() throws InsufficientAmount, EnteredInvalidAmount {
-        Wallet wallet = new Wallet();
-
-        wallet.deposit(79, Currency.Rs);
-
-        assertThat(wallet.withdraw(1, Currency.$), is(true));
-    }
-
-    @Test
-    void ShouldThrowExceptionWhenTheWithdrawalAmountIsMoreThanTheAvailableAmount() throws EnteredInvalidAmount {
-        Wallet wallet = new Wallet();
-
-        wallet.deposit(2, Currency.$);
+        wallet.deposit(twoDollar);
 
         assertThrows(InsufficientAmount.class, () -> {
-            wallet.withdraw(190, Currency.Rs);
+            wallet.withdraw(twoHundredRupee);
         });
 
     }
 
-    @Test
-    void shouldEquateWalletAmount() throws EnteredInvalidAmount {
-        Wallet wallet = new Wallet();
 
-        wallet.deposit(45, Currency.Rs);
-        wallet.deposit(84, Currency.Rs);
-        wallet.deposit(1,Currency.$);
-        String expected = "$ 2.723446893787575";
-
-        assertThat(wallet.checkAmount(Currency.$), is(expected));
-    }
 }

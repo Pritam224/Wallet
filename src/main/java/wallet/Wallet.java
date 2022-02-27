@@ -1,38 +1,41 @@
 package wallet;
 
 import exceptions.InsufficientAmount;
-import exceptions.EnteredInvalidAmount;
+
+import static wallet.Money.dollar;
+import static wallet.Money.rupee;
 
 public class Wallet {
 
-    private double TotalAmountInRupee = 0;
+    private double totalAmountInRupee;
 
-
-    public boolean deposit(double value, Currency currency) throws EnteredInvalidAmount {
-        if (value <= 0) {
-            throw new EnteredInvalidAmount();
-        }
-        TotalAmountInRupee += value * currency.getConversionValue();
-
-        return true;
+    public Wallet(double totalAmountInRupee) {
+        this.totalAmountInRupee = totalAmountInRupee;
     }
 
-
-    public boolean withdraw(double value, Currency currency) throws InsufficientAmount, EnteredInvalidAmount {
-        if (value <= 0) {
+    public void deposit(Money money) throws EnteredInvalidAmount {
+        if (money.inRupee() <= 0) {
             throw new EnteredInvalidAmount();
         }
-        if (TotalAmountInRupee < value * currency.getConversionValue()) {
+        totalAmountInRupee += money.inRupee();
+
+    }
+
+    public void withdraw(Money money) throws InsufficientAmount {
+
+        if (totalAmountInRupee < money.inRupee()) {
             throw new InsufficientAmount();
         }
 
-        TotalAmountInRupee -= value * currency.getConversionValue();
-        return true;
+        totalAmountInRupee -= money.inRupee();
     }
 
 
-    public String checkAmount(Currency currency) {
-        String availableAmount = currency + " " + TotalAmountInRupee / currency.getConversionValue();
-        return availableAmount;
+    public Money checkAmountInRupee() {
+        return rupee(totalAmountInRupee / Currency.Rs.getConversionValue());
+    }
+
+    public Money checkAmountInDollar() {
+        return dollar(totalAmountInRupee / Currency.$.getConversionValue());
     }
 }
