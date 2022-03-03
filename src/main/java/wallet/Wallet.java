@@ -13,10 +13,7 @@ public class Wallet {
         this.totalAmountInRupee = totalAmountInRupee;
     }
 
-    public void deposit(Money money) throws EnteredInvalidAmount {
-        if (money.inRupee() <= 0) {
-            throw new EnteredInvalidAmount();
-        }
+    public void deposit(Money money) {
         totalAmountInRupee += money.inRupee();
 
     }

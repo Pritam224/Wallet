@@ -27,10 +27,10 @@ public class WalletTest {
     void shouldReturnTrueWhenTheMoneyIsWithdrawnSuccessfully() throws InsufficientAmount{
         Wallet wallet = new Wallet(0);
         Money seventyNineRupee = rupee(79);
-        Money oneDollar = rupee(1);
+        Money oneRupee = rupee(1);
 
         wallet.deposit(seventyNineRupee);
-        wallet.withdraw(oneDollar);
+        wallet.withdraw(oneRupee);
 
         assertThat(wallet.checkAmountInRupee(), is(equalTo(rupee(78))));
     }
